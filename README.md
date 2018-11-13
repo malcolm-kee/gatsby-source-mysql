@@ -1,5 +1,7 @@
 # gatsby-source-mysql
 
+[![version](https://img.shields.io/npm/v/gatsby-source-mysql.svg)](https://www.npmjs.com/package/gatsby-source-mysql) ![license](https://img.shields.io/npm/l/gatsby-source-mysql.svg)
+
 Source plugin for pulling data into Gatsby from MySQL database.
 
 ## How to use
@@ -78,7 +80,9 @@ As this plugin is a wrapper of the popular [`mysql`](https://www.npmjs.com/packa
 ## How to query your data using GraphQL
 
 The GraphQL type would be follow the format of `all<typePrefix>Results`.
+
 Below is a sample query, however, it is probably different from yours as it would dependent on your configuration and your SQL query results.
+
 Use [GraphiQL](https://www.gatsbyjs.org/docs/introducing-graphiql/) to explore the available fields.
 
 ```graphql
