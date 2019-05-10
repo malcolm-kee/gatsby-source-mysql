@@ -5,6 +5,49 @@ const { createNodeFactory, generateNodeId } = createNodeHelpers({
   typePrefix: 'mysql'
 });
 
+function reduceChildFields(childEntities, nodeId) {
+  let childFields = {};
+
+  childEntities.forEach(
+    ({ name: childName, idFieldName: childIdFieldName, foreignKey, __sqlResult }) => {
+      const childIds = __sqlResult
+        .filter(child => child[foreignKey] === nodeId)
+        .map(child => generateNodeId(childName, child[childIdFieldName]));
+
+      childFields[`${pluralize.plural(childName)}___NODE`] = childIds;
+    }
+  );
+
+  return childFields;
+}
+
+function mapSqlResults(
+  __sqlResult,
+  { parentName, foreignKey, childEntities, idFieldName }
+) {
+  return __sqlResult.map(result => {
+    const nodeId = result[idFieldName];
+    const parentField =
+      parentName && foreignKey
+        ? {
+            [`${parentName}___NODE`]: generateNodeId(parentName, result[foreignKey])
+          }
+        : {};
+
+    const childFields = reduceChildFields(childEntities, nodeId);
+
+    return Object.assign(
+      {},
+      result,
+      {
+        id: nodeId
+      },
+      parentField,
+      childFields
+    );
+  });
+}
+
 function createMysqlNodes(
   { name, __sqlResult, idFieldName, parentName, foreignKey },
   allSqlResults,
@@ -16,37 +59,14 @@ function createMysqlNodes(
   );
 
   if (Array.isArray(__sqlResult)) {
-    __sqlResult.forEach(result => {
-      const parentField =
-        parentName && foreignKey
-          ? {
-              [`${parentName}___NODE`]: generateNodeId(parentName, result[foreignKey])
-            }
-          : {};
+    const sqlNodes = mapSqlResults(
+      __sqlResult,
+      { foreignKey, parentName, childEntities, idFieldName },
+      childEntities
+    );
 
-      const childFields = childEntities.reduce(
-        (
-          fields,
-          { name: childName, idFieldName: childIdFieldName, foreignKey, __sqlResult }
-        ) =>
-          Object.assign({}, fields, {
-            [`${pluralize.plural(childName)}___NODE`]: __sqlResult
-              .filter(child => child[foreignKey] === result[idFieldName])
-              .map(child => generateNodeId(childName, child[childIdFieldName]))
-          }),
-        {}
-      );
-
-      const sanitizedResult = Object.assign(
-        {},
-        result,
-        {
-          id: result[idFieldName]
-        },
-        parentField,
-        childFields
-      );
-      const resultNode = MySqlNode(sanitizedResult);
+    sqlNodes.forEach(node => {
+      const resultNode = MySqlNode(node);
       createNode(resultNode);
     });
   }

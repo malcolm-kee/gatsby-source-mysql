@@ -4,6 +4,8 @@
   "description": "Source plugin for pulling data into Gatsby from MySQL database.",
   "author": "Malcolm Kee <malcolm.keeweesiong@gmail.com>",
   "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint src"
   },
   "keywords": [
@@ -27,6 +29,8 @@
     "url": "https://github.com/malcolm-kee/gatsby-source-mysql/issues"
   },
   "devDependencies": {
-    "eslint": "^5.16.0"
+    "@types/jest": "^24.0.12",
+    "eslint": "^5.16.0",
+    "jest": "^24.8.0"
   }
 }
