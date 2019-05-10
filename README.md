@@ -91,9 +91,9 @@ module.exports = {
 
 ### joining queries
 
-It's possible to join the query for one-to-many relationship by providing `parentName` and `foreignKey` to the query object.
+It's possible to join the results of the queries by providing `parentName` and `foreignKey` to the query object.
 
-> one-to-one and many-to-many relationships are not supported currently. If you have a use case for them [raise an issue][raise-issue], and I'll look into it.
+> Currently only one-to-many join is supported. If you have a use case for one-to-one or many-to-many join, [raise an issue][raise-issue], and I'll look into it.
 
 ```javascript
 // In your gatsby-config.js
@@ -129,7 +129,7 @@ module.exports = {
 };
 ```
 
-In the example above, `country` and `city` is one-to-many relationship (one country to multiple cities), and there are joined with `country.Code = city.CountryCode`.
+In the example above, `country` and `city` is one-to-many relationship (one country to multiple cities), and they are joined with `country.Code = city.CountryCode`.
 
 With the configuration above, you can query a country joined with all the related cities with
 
@@ -168,8 +168,6 @@ query {
 ```
 
 ## Plugin options
-
-As this plugin is a wrapper of the popular [`mysql`](https://www.npmjs.com/package/mysql) library, the options are based on the library.
 
 - **connectionDetails** (required): options when establishing the connection. Refer to [`mysql` connection options](https://www.npmjs.com/package/mysql#connection-options)
 - **queries** (required): an array of object for your query. Each object could have the following fields:
