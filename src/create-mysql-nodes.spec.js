@@ -40,7 +40,8 @@ describe('createMysqlNodes', () => {
           { ID: 5, name: 'Penang', countryCode: 'MY' }
         ],
         parentName: 'country',
-        foreignKey: 'countryCode'
+        foreignKey: 'countryCode',
+        cardinality: 'OneToMany'
       },
       {
         name: 'country',
@@ -74,7 +75,8 @@ describe('createMysqlNodes', () => {
           { ID: 5, name: 'Penang', countryCode: 'MY' }
         ],
         parentName: 'country',
-        foreignKey: 'countryCode'
+        foreignKey: 'countryCode',
+        cardinality: 'OneToMany'
       },
       {
         name: 'country',

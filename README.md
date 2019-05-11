@@ -91,9 +91,9 @@ module.exports = {
 
 ### joining queries
 
-It's possible to join the results of the queries by providing `parentName` and `foreignKey` to the query object.
+It's possible to join the results of the queries by providing `parentName`, `foreignKey`, and `cardinality` to the query object.
 
-> Currently only one-to-many join is supported. If you have a use case for one-to-one or many-to-many join, [raise an issue][raise-issue], and I'll look into it.
+> Currently only one-to-one and one-to-many relationship are supported. If you have a use case for many-to-many relationship, [raise an issue][raise-issue], and I'll look into it.
 
 ```javascript
 // In your gatsby-config.js
@@ -119,7 +119,8 @@ module.exports = {
             idFieldName: 'ID',
             name: 'city',
             parentName: 'country',
-            foreignKey: 'CountryCode'
+            foreignKey: 'CountryCode',
+            cardinality: 'OneToMany'
           }
         ]
       }
@@ -172,12 +173,13 @@ query {
 - **connectionDetails** (required): options when establishing the connection. Refer to [`mysql` connection options](https://www.npmjs.com/package/mysql#connection-options)
 - **queries** (required): an array of object for your query. Each object could have the following fields:
 
-| Field         | Required? | Description                                                                                                                               |
-| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `statement`   | Required  | the SQL query statement to be executed.                                                                                                   |
-| `idFieldName` | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                   |
-| `name`        | Required  | name for the query. Will impact the value for the graphql type                                                                            |
-| `parentName`  | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records). |
-| `foreignKey`  | Optional  | foreign key to join the parent entity.                                                                                                    |
+| Field         | Required? | Description                                                                                                                                                                                |
+| ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `statement`   | Required  | the SQL query statement to be executed.                                                                                                                                                    |
+| `idFieldName` | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
+| `name`        | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
+| `parentName`  | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
+| `foreignKey`  | Optional  | foreign key to join the parent entity.                                                                                                                                                     |
+| `cardinality` | Optional  | the relationship between the parent and this entity. Possible values: `"OneToMany"`, `"OneToOne"`. Default to `"OneToMany"`. (Note: many-to-many relationship is currently not supported.) |
 
 [raise-issue]: https://github.com/malcolm-kee/gatsby-source-mysql/issues/new

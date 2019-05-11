@@ -9,12 +9,22 @@ function reduceChildFields(childEntities, nodeId) {
   let childFields = {};
 
   childEntities.forEach(
-    ({ name: childName, idFieldName: childIdFieldName, foreignKey, __sqlResult }) => {
+    ({
+      name: childName,
+      idFieldName: childIdFieldName,
+      foreignKey,
+      cardinality = 'OneToMany',
+      __sqlResult
+    }) => {
       const childIds = __sqlResult
         .filter(child => child[foreignKey] === nodeId)
         .map(child => generateNodeId(childName, child[childIdFieldName]));
 
-      childFields[`${pluralize.plural(childName)}___NODE`] = childIds;
+      if (cardinality === 'OneToMany') {
+        childFields[`${pluralize.plural(childName)}___NODE`] = childIds;
+      } else {
+        childFields[`${pluralize.singular(childName)}___NODE`] = childIds[0];
+      }
     }
   );
 
