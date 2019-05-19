@@ -1,0 +1,294 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createMysqlNodes creates correct node for child entity in one-to-one relationship 1`] = `
+Array [
+  Array [
+    Object {
+      "ID": 1,
+      "children": Array [],
+      "countryCode": "MY",
+      "country___NODE": "mysql__Country__MY",
+      "id": "mysql__Countrycapital__1",
+      "internal": Object {
+        "contentDigest": "becbdc82e333eea44e9bf616ff5a0254",
+        "type": "MysqlCountrycapital",
+      },
+      "mysqlId": 1,
+      "name": "Kuala Lumpur",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 2,
+      "children": Array [],
+      "countryCode": "US",
+      "country___NODE": "mysql__Country__US",
+      "id": "mysql__Countrycapital__2",
+      "internal": Object {
+        "contentDigest": "1e2e2cc195d672d267783f2084a904d1",
+        "type": "MysqlCountrycapital",
+      },
+      "mysqlId": 2,
+      "name": "Washington, D.C.",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 3,
+      "children": Array [],
+      "countryCode": "UK",
+      "country___NODE": "mysql__Country__UK",
+      "id": "mysql__Countrycapital__3",
+      "internal": Object {
+        "contentDigest": "ae53a02bb994429c6fff920c91e9155f",
+        "type": "MysqlCountrycapital",
+      },
+      "mysqlId": 3,
+      "name": "London",
+      "parent": "__SOURCE__",
+    },
+  ],
+]
+`;
+
+exports[`createMysqlNodes creates correct node for parent entity in one-to-one relationship 1`] = `
+Array [
+  Array [
+    Object {
+      "Code": "MY",
+      "children": Array [],
+      "countrycapital___NODE": "mysql__Countrycapital__1",
+      "id": "mysql__Country__MY",
+      "internal": Object {
+        "contentDigest": "ddb98c674ff3819cc13340f9c401f824",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "MY",
+      "name": "Malaysia",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "Code": "US",
+      "children": Array [],
+      "countrycapital___NODE": "mysql__Countrycapital__2",
+      "id": "mysql__Country__US",
+      "internal": Object {
+        "contentDigest": "ce9424bb485dbb8d027919fb216da0ad",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "US",
+      "name": "United States",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "Code": "UK",
+      "children": Array [],
+      "countrycapital___NODE": "mysql__Countrycapital__3",
+      "id": "mysql__Country__UK",
+      "internal": Object {
+        "contentDigest": "bd7d6bb4933f9e9fc9bcc5b026a9ec0d",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "UK",
+      "name": "United Kingdom",
+      "parent": "__SOURCE__",
+    },
+  ],
+]
+`;
+
+exports[`createMysqlNodes will create correct nodes 1`] = `
+Array [
+  Array [
+    Object {
+      "ID": 1,
+      "children": Array [],
+      "id": "mysql__City__1",
+      "internal": Object {
+        "contentDigest": "69bb5879ba68b28191856fd59b5b2f45",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 1,
+      "name": "Kuala Lumpur",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 2,
+      "children": Array [],
+      "id": "mysql__City__2",
+      "internal": Object {
+        "contentDigest": "ba914dca118e5b6f49409da3724c8cab",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 2,
+      "name": "New York",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 3,
+      "children": Array [],
+      "id": "mysql__City__3",
+      "internal": Object {
+        "contentDigest": "22d13fc67d19aa249f22e303317b2969",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 3,
+      "name": "London",
+      "parent": "__SOURCE__",
+    },
+  ],
+]
+`;
+
+exports[`createMysqlNodes will create correct nodes for child entity in one-to-many relationship 1`] = `
+Array [
+  Array [
+    Object {
+      "ID": 1,
+      "children": Array [],
+      "countryCode": "MY",
+      "country___NODE": "mysql__Country__MY",
+      "id": "mysql__City__1",
+      "internal": Object {
+        "contentDigest": "2bdef45cb788bbaaba6594f5fb5919f7",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 1,
+      "name": "Kuala Lumpur",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 2,
+      "children": Array [],
+      "countryCode": "US",
+      "country___NODE": "mysql__Country__US",
+      "id": "mysql__City__2",
+      "internal": Object {
+        "contentDigest": "b52d5b2e631824222a6db6d5685ced27",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 2,
+      "name": "New York",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 3,
+      "children": Array [],
+      "countryCode": "UK",
+      "country___NODE": "mysql__Country__UK",
+      "id": "mysql__City__3",
+      "internal": Object {
+        "contentDigest": "4c3762009897d9228b933992b27865a6",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 3,
+      "name": "London",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 4,
+      "children": Array [],
+      "countryCode": "US",
+      "country___NODE": "mysql__Country__US",
+      "id": "mysql__City__4",
+      "internal": Object {
+        "contentDigest": "2d45fd733b09bc5206f7e3124a26b51a",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 4,
+      "name": "Chicago",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "ID": 5,
+      "children": Array [],
+      "countryCode": "MY",
+      "country___NODE": "mysql__Country__MY",
+      "id": "mysql__City__5",
+      "internal": Object {
+        "contentDigest": "200941caf1a3f0e76b3acf017bf56a25",
+        "type": "MysqlCity",
+      },
+      "mysqlId": 5,
+      "name": "Penang",
+      "parent": "__SOURCE__",
+    },
+  ],
+]
+`;
+
+exports[`createMysqlNodes will create correct nodes for parent entity in one-to-many relationship 1`] = `
+Array [
+  Array [
+    Object {
+      "Code": "MY",
+      "children": Array [],
+      "cities___NODE": Array [
+        "mysql__City__1",
+        "mysql__City__5",
+      ],
+      "id": "mysql__Country__MY",
+      "internal": Object {
+        "contentDigest": "92e287518025f05313e860e6bf669522",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "MY",
+      "name": "Malaysia",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "Code": "US",
+      "children": Array [],
+      "cities___NODE": Array [
+        "mysql__City__2",
+        "mysql__City__4",
+      ],
+      "id": "mysql__Country__US",
+      "internal": Object {
+        "contentDigest": "2709c7859a37db004e8940a6444bbedd",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "US",
+      "name": "United States",
+      "parent": "__SOURCE__",
+    },
+  ],
+  Array [
+    Object {
+      "Code": "UK",
+      "children": Array [],
+      "cities___NODE": Array [
+        "mysql__City__3",
+      ],
+      "id": "mysql__Country__UK",
+      "internal": Object {
+        "contentDigest": "bd79688fda1ea624e781724aea99430a",
+        "type": "MysqlCountry",
+      },
+      "mysqlId": "UK",
+      "name": "United Kingdom",
+      "parent": "__SOURCE__",
+    },
+  ],
+]
+`;

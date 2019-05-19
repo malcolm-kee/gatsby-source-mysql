@@ -1,39 +1,24 @@
-const createNodeHelpers = require('gatsby-node-helpers').default;
-const mysql = require('mysql');
+const queryDb = require('./src/db');
+const createMysqlNodes = require('./src/create-mysql-nodes');
 
-exports.sourceNodes = ({ actions }, configOptions) => {
+exports.sourceNodes = async ({ actions }, configOptions) => {
   const { createNode } = actions;
-  const {
-    connectionDetails,
-    query,
-    idFieldName = 'id',
-    typePrefix = 'MySql'
-  } = configOptions;
-  const { createNodeFactory } = createNodeHelpers({
-    typePrefix
-  });
+  const { connectionDetails, queries } = configOptions;
 
-  const MySqlNode = createNodeFactory('Results');
+  const { db, queryResults } = await queryDb(connectionDetails, queries);
 
-  const dbConnection = mysql.createConnection(connectionDetails);
+  try {
+    queries
+      .map((query, index) =>
+        Object.assign({}, query, { __sqlResult: queryResults[index] })
+      )
+      .forEach((sqlResult, _, sqlResults) =>
+        createMysqlNodes(sqlResult, sqlResults, createNode)
+      );
 
-  return new Promise((fulfill, reject) => {
-    dbConnection.query(query, (error, results, fields) => {
-      if (error) return reject(error);
-
-      if (Array.isArray(results)) {
-        results.forEach((result, index) => {
-          const sanitizedResult = Object.assign({}, result, {
-            id: result[idFieldName]
-          });
-          const resultNode = MySqlNode(sanitizedResult);
-          createNode(resultNode);
-        });
-      }
-
-      fulfill();
-    });
-
-    dbConnection.end();
-  });
+    db.end();
+  } catch (e) {
+    console.error(e);
+    db.end();
+  }
 };
