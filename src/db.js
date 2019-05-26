@@ -5,6 +5,11 @@ function query(dbConnection, statement) {
     dbConnection.query(statement, (error, results) => {
       if (error) return reject(error);
 
+      if (/^call/i.test(statement)) {
+        console.info(`stored procedure statments: '${statement}'`);
+        return fulfill(results[0]);
+      }
+
       fulfill(results);
     });
   });

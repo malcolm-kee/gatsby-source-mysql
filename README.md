@@ -53,7 +53,7 @@ query {
 }
 ```
 
-### multiple queries
+### Multiple Queries
 
 When you have multiple queries, add another item in the `queries` option with different `name`.
 
@@ -89,7 +89,7 @@ module.exports = {
 };
 ```
 
-### joining queries
+### Joining Queries
 
 It's possible to join the results of the queries by providing `parentName`, `foreignKey`, and `cardinality` to the query object.
 
@@ -175,7 +175,7 @@ query {
 
 | Field         | Required? | Description                                                                                                                                                                                |
 | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `statement`   | Required  | the SQL query statement to be executed.                                                                                                                                                    |
+| `statement`   | Required  | the SQL query statement to be executed. Stored procedures are supported, e.g. `'CALL myProcedureThatReturnsResult(1, 1)'`                                                                  |
 | `idFieldName` | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
 | `name`        | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
 | `parentName`  | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
