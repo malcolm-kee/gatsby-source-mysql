@@ -1,9 +1,22 @@
 const createNodeHelpers = require('gatsby-node-helpers').default;
 const pluralize = require('pluralize');
+const { createBufferFileNode } = require('./create-image-file-node');
 
 const { createNodeFactory, generateNodeId } = createNodeHelpers({
   typePrefix: 'mysql'
 });
+
+function omit(object, paths) {
+  const result = {};
+
+  Object.keys(object).forEach(key => {
+    if (paths.indexOf(key) === -1) {
+      result[key] = object[key];
+    }
+  });
+
+  return result;
+}
 
 function reduceChildFields(childEntities, nodeId) {
   let childFields = {};
@@ -58,10 +71,10 @@ function mapSqlResults(
   });
 }
 
-function createMysqlNodes(
-  { name, __sqlResult, idFieldName, parentName, foreignKey },
+async function createMysqlNodes(
+  { name, __sqlResult, idFieldName, parentName, foreignKey, imageFieldNames = [] },
   allSqlResults,
-  createNode
+  { createNode, createNodeId, store, createParentChildLink }
 ) {
   const MySqlNode = createNodeFactory(name);
   const childEntities = allSqlResults.filter(
@@ -75,10 +88,35 @@ function createMysqlNodes(
       childEntities
     );
 
-    sqlNodes.forEach(node => {
-      const resultNode = MySqlNode(node);
-      createNode(resultNode);
-    });
+    await Promise.all(
+      sqlNodes.map(async node => {
+        const nodeWithoutImageFields = omit(node, imageFieldNames);
+        const sqlNode = MySqlNode(nodeWithoutImageFields);
+        await createNode(sqlNode);
+
+        return Promise.all(
+          imageFieldNames.map(async field => {
+            const image = node[field];
+
+            const imageNode = await createBufferFileNode({
+              createNodeId,
+              store,
+              fieldName: field,
+              buffer: image,
+              parentId: sqlNode.id
+            });
+
+            if (imageNode) {
+              await createNode(imageNode);
+              createParentChildLink({
+                parent: sqlNode,
+                child: imageNode
+              });
+            }
+          })
+        );
+      })
+    );
   }
 }
 

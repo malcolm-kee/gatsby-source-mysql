@@ -53,6 +53,12 @@ Array [
 ]
 `;
 
+exports[`createMysqlNodes creates correct node for child entity in one-to-one relationship 2`] = `Array []`;
+
+exports[`createMysqlNodes creates correct node for child entity in one-to-one relationship 3`] = `Array []`;
+
+exports[`createMysqlNodes creates correct node for child entity in one-to-one relationship 4`] = `Array []`;
+
 exports[`createMysqlNodes creates correct node for parent entity in one-to-one relationship 1`] = `
 Array [
   Array [
@@ -103,6 +109,12 @@ Array [
 ]
 `;
 
+exports[`createMysqlNodes creates correct node for parent entity in one-to-one relationship 2`] = `Array []`;
+
+exports[`createMysqlNodes creates correct node for parent entity in one-to-one relationship 3`] = `Array []`;
+
+exports[`createMysqlNodes creates correct node for parent entity in one-to-one relationship 4`] = `Array []`;
+
 exports[`createMysqlNodes will create correct nodes 1`] = `
 Array [
   Array [
@@ -149,6 +161,12 @@ Array [
   ],
 ]
 `;
+
+exports[`createMysqlNodes will create correct nodes 2`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes 3`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes 4`] = `Array []`;
 
 exports[`createMysqlNodes will create correct nodes for child entity in one-to-many relationship 1`] = `
 Array [
@@ -235,6 +253,12 @@ Array [
 ]
 `;
 
+exports[`createMysqlNodes will create correct nodes for child entity in one-to-many relationship 2`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes for child entity in one-to-many relationship 3`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes for child entity in one-to-many relationship 4`] = `Array []`;
+
 exports[`createMysqlNodes will create correct nodes for parent entity in one-to-many relationship 1`] = `
 Array [
   Array [
@@ -292,3 +316,9 @@ Array [
   ],
 ]
 `;
+
+exports[`createMysqlNodes will create correct nodes for parent entity in one-to-many relationship 2`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes for parent entity in one-to-many relationship 3`] = `Array []`;
+
+exports[`createMysqlNodes will create correct nodes for parent entity in one-to-many relationship 4`] = `Array []`;

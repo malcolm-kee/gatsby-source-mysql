@@ -6,7 +6,7 @@ describe('createMysqlNodes', () => {
   });
 
   it('will create correct nodes', () => {
-    const createNode = jest.fn();
+    const nodeHelpers = getNodeHelpers();
     const allSqlResults = [
       {
         name: 'city',
@@ -20,13 +20,16 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, nodeHelpers);
 
-    expect(createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNodeId.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createParentChildLink.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.store.getState.mock.calls).toMatchSnapshot();
   });
 
   it('will create correct nodes for child entity in one-to-many relationship', () => {
-    const createNode = jest.fn();
+    const nodeHelpers = getNodeHelpers();
     const allSqlResults = [
       {
         name: 'city',
@@ -55,13 +58,16 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, nodeHelpers);
 
-    expect(createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNodeId.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createParentChildLink.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.store.getState.mock.calls).toMatchSnapshot();
   });
 
   it('will create correct nodes for parent entity in one-to-many relationship', () => {
-    const createNode = jest.fn();
+    const nodeHelpers = getNodeHelpers();
     const allSqlResults = [
       {
         name: 'city',
@@ -90,13 +96,16 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[1], allSqlResults, nodeHelpers);
 
-    expect(createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNodeId.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createParentChildLink.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.store.getState.mock.calls).toMatchSnapshot();
   });
 
   it('creates correct node for child entity in one-to-one relationship', () => {
-    const createNode = jest.fn();
+    const nodeHelpers = getNodeHelpers();
     const allSqlResults = [
       {
         name: 'countrycapital',
@@ -123,13 +132,16 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, nodeHelpers);
 
-    expect(createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNodeId.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createParentChildLink.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.store.getState.mock.calls).toMatchSnapshot();
   });
 
   it('creates correct node for parent entity in one-to-one relationship', () => {
-    const createNode = jest.fn();
+    const nodeHelpers = getNodeHelpers();
     const allSqlResults = [
       {
         name: 'countrycapital',
@@ -156,8 +168,28 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[1], allSqlResults, nodeHelpers);
 
-    expect(createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNode.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createNodeId.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.createParentChildLink.mock.calls).toMatchSnapshot();
+    expect(nodeHelpers.store.getState.mock.calls).toMatchSnapshot();
   });
 });
+
+function getNodeHelpers() {
+  const store = {
+    getState: jest.fn(() => ({
+      program: {
+        directory: '/public'
+      }
+    }))
+  };
+
+  return {
+    store,
+    createNode: jest.fn(),
+    createNodeId: jest.fn(),
+    createParentChildLink: jest.fn()
+  };
+}

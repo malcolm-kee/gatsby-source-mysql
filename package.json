@@ -15,9 +15,13 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "fs-extra": "^8.0.1",
     "gatsby-node-helpers": "^0.3.0",
+    "image-type": "^4.1.0",
     "mysql": "^2.16.0",
-    "pluralize": "^7.0.0"
+    "pluralize": "^7.0.0",
+    "pretty-bytes": "^5.2.0",
+    "slash": "^3.0.0"
   },
   "peerDependencies": {
     "gatsby": ">2.0.0"
