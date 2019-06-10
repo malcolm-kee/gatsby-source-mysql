@@ -168,18 +168,99 @@ query {
 }
 ```
 
+### Process Image Saved as Blob
+
+It's possible to process image saved as Blob in your database by provide `imageFieldNames` to the query object.
+
+> Note that only `png`, `jpg`, `jpeg`, `bmp`, and `tiff` images are supported due to the limitation of [`sharp`][sharp].
+
+Assume you have a `staff` table with its `picture` column storing png image as Blob.
+
+```javascript
+// In your gatsby-config.js
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-source-mysql`,
+      options: {
+        connectionDetails: {
+          host: 'localhost',
+          user: 'db-username',
+          password: 'db-password',
+          database: 'sakila'
+        },
+        queries: [
+          {
+            statement: 'SELECT * FROM staff',
+            idFieldName: 'staff_id',
+            name: 'staff',
+            imageFieldNames: ['picture']
+          }
+        ]
+      }
+    }
+    // ... other plugins
+  ]
+};
+```
+
+With the configuration above, you can use `gatsby-image` like below:
+
+```jsx
+import { useStaticQuery, graphql } from 'gatsby';
+import Img from 'gatsby-image';
+import React from 'react';
+
+const StaffImages = () => {
+  const data = useStaticQuery(graphql`
+    {
+      allMysqlStaff {
+        edges {
+          node {
+            childMysqlImage {
+              childImageSharp {
+                fixed(width: 100, height: 100) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  const imageData = data.allMysqlStaff.edges
+    .filter(edge => edge.node.childMysqlImage !== null)
+    .map(edge => edge.node.childMysqlImage.childImageSharp.fixed);
+
+  return (
+    <>
+      {imageData.map((imageData, index) => (
+        <Img fixed={imageData} key={index} />
+      ))}
+    </>
+  );
+};
+```
+
+For more options other than `GatsbyImageSharpFixed`, refer to documentation of [`gatsby-image`][gatsby-image].
+
 ## Plugin options
 
 - **connectionDetails** (required): options when establishing the connection. Refer to [`mysql` connection options](https://www.npmjs.com/package/mysql#connection-options)
 - **queries** (required): an array of object for your query. Each object could have the following fields:
 
-| Field         | Required? | Description                                                                                                                                                                                |
-| ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `statement`   | Required  | the SQL query statement to be executed. Stored procedures are supported, e.g. `'CALL myProcedureThatReturnsResult(1, 1)'`                                                                  |
-| `idFieldName` | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
-| `name`        | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
-| `parentName`  | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
-| `foreignKey`  | Optional  | foreign key to join the parent entity.                                                                                                                                                     |
-| `cardinality` | Optional  | the relationship between the parent and this entity. Possible values: `"OneToMany"`, `"OneToOne"`. Default to `"OneToMany"`. (Note: many-to-many relationship is currently not supported.) |
+| Field             | Required? | Description                                                                                                                                                                                |
+| ----------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `statement`       | Required  | the SQL query statement to be executed. Stored procedures are supported, e.g. `'CALL myProcedureThatReturnsResult(1, 1)'`                                                                  |
+| `idFieldName`     | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
+| `name`            | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
+| `parentName`      | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
+| `foreignKey`      | Optional  | foreign key to join the parent entity.                                                                                                                                                     |
+| `cardinality`     | Optional  | the relationship between the parent and this entity. Possible values: `"OneToMany"`, `"OneToOne"`. Default to `"OneToMany"`. (Note: many-to-many relationship is currently not supported.) |
+| `imageFieldNames` | Optional  | columns that store image Blob.                                                                                                                                                             |
 
 [raise-issue]: https://github.com/malcolm-kee/gatsby-source-mysql/issues/new
+[gatsby-image]: https://www.gatsbyjs.org/packages/gatsby-image/#gatsby-transformer-sharp
+[sharp]: https://github.com/lovell/sharp
