@@ -1,3 +1,4 @@
+const { createRemoteFileNode } = require('gatsby-source-filesystem');
 const createNodeHelpers = require('gatsby-node-helpers').default;
 const pluralize = require('pluralize');
 const { createBufferFileNode } = require('./create-image-file-node');
@@ -72,7 +73,15 @@ function mapSqlResults(
 }
 
 async function createMysqlNodes(
-  { name, __sqlResult, idFieldName, parentName, foreignKey, imageFieldNames = [] },
+  {
+    name,
+    __sqlResult,
+    idFieldName,
+    parentName,
+    foreignKey,
+    imageFieldNames = [],
+    remoteImageFieldNames = []
+  },
   allSqlResults,
   { createNode, createNodeId, store, createParentChildLink }
 ) {
@@ -90,11 +99,14 @@ async function createMysqlNodes(
 
     await Promise.all(
       sqlNodes.map(async node => {
-        const nodeWithoutImageFields = omit(node, imageFieldNames);
+        const nodeWithoutImageFields = omit(
+          node,
+          imageFieldNames.concat(remoteImageFieldNames)
+        );
         const sqlNode = MySqlNode(nodeWithoutImageFields);
         await createNode(sqlNode);
 
-        return Promise.all(
+        await Promise.all(
           imageFieldNames.map(async field => {
             const image = node[field];
 
@@ -111,6 +123,27 @@ async function createMysqlNodes(
               createParentChildLink({
                 parent: sqlNode,
                 child: imageNode
+              });
+            }
+          })
+        );
+
+        await Promise.all(
+          remoteImageFieldNames.map(async field => {
+            const imageUrl = node[field];
+
+            if (imageUrl) {
+              const imageFileNode = await createRemoteFileNode({
+                url: imageUrl,
+                parentNodeId: sqlNode.id,
+                store,
+                createNode,
+                createNodeId
+              });
+
+              createParentChildLink({
+                parent: sqlNode,
+                child: imageFileNode
               });
             }
           })

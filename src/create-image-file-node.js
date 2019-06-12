@@ -60,10 +60,9 @@ exports.createBufferFileNode = async function createBufferFileNode({
 
     const slashed = slash(tmpFilename);
     const parsedSlashed = path.parse(slashed);
-    const slashedFile = {
-      ...parsedSlashed,
+    const slashedFile = Object.assign({}, parsedSlashed, {
       absolutePath: slashed
-    };
+    });
 
     const internal = {
       contentDigest: digest,
