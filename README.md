@@ -168,6 +168,84 @@ query {
 }
 ```
 
+### Process Image in Remote URL
+
+It's possible to process image whose url is saved in your table by provide `remoteImageFieldNames` to the query object.
+
+> Note that only `png`, `jpg`, `jpeg`, `bmp`, and `tiff` images are supported due to the limitation of [`sharp`][sharp].
+
+Assume you have a `staff` table with its `picture` column storing remote url of image.
+
+```javascript
+// In your gatsby-config.js
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-source-mysql`,
+      options: {
+        connectionDetails: {
+          host: 'localhost',
+          user: 'db-username',
+          password: 'db-password',
+          database: 'sakila'
+        },
+        queries: [
+          {
+            statement: 'SELECT * FROM staff',
+            idFieldName: 'staff_id',
+            name: 'staff',
+            remoteImageFieldNames: ['picture']
+          }
+        ]
+      }
+    }
+    // ... other plugins
+  ]
+};
+```
+
+With the configuration above, you can use `gatsby-image` like below:
+
+```jsx
+import { useStaticQuery, graphql } from 'gatsby';
+import Img from 'gatsby-image';
+import React from 'react';
+
+const StaffImages = () => {
+  const data = useStaticQuery(graphql`
+    {
+      allMysqlStaff {
+        edges {
+          node {
+            childFile {
+              childImageSharp {
+                fixed(width: 100, height: 100) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  const imageData = data.allMysqlStaff.edges
+    .filter(edge => edge.node.childFile !== null)
+    .map(edge => edge.node.childFile.childImageSharp.fixed);
+
+  return (
+    <>
+      {imageData.map((imageData, index) => (
+        <Img fixed={imageData} key={index} />
+      ))}
+    </>
+  );
+};
+```
+
+For more options other than `GatsbyImageSharpFixed`, refer to documentation of [`gatsby-image`][gatsby-image].
+
 ### Process Image Saved as Blob
 
 It's possible to process image saved as Blob in your database by provide `imageFieldNames` to the query object.
