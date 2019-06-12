@@ -1,7 +1,7 @@
 const queryDb = require('./src/db');
 const createMysqlNodes = require('./src/create-mysql-nodes');
 
-exports.sourceNodes = async ({ actions, createNodeId, store }, configOptions) => {
+exports.sourceNodes = async ({ actions, createNodeId, store, cache }, configOptions) => {
   const { createNode, createParentChildLink } = actions;
   const { connectionDetails, queries } = configOptions;
 
@@ -18,6 +18,7 @@ exports.sourceNodes = async ({ actions, createNodeId, store }, configOptions) =>
             createNode,
             createNodeId,
             store,
+            cache,
             createParentChildLink
           })
         )
