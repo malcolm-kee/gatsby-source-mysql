@@ -83,7 +83,7 @@ async function createMysqlNodes(
     remoteImageFieldNames = []
   },
   allSqlResults,
-  { createNode, createNodeId, store, createParentChildLink }
+  { createNode, createNodeId, store, createParentChildLink, cache }
 ) {
   const MySqlNode = createNodeFactory(name);
   const childEntities = allSqlResults.filter(
@@ -138,6 +138,7 @@ async function createMysqlNodes(
                 parentNodeId: sqlNode.id,
                 store,
                 createNode,
+                cache,
                 createNodeId
               });
 
