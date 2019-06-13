@@ -242,7 +242,7 @@ export const SqlImage = () => {
 };
 ```
 
-If you have multiple columns with image url, pass down multiple values to `remoteImageFieldNames` and use `mysqlImages`, which will be an array of images.
+If you have multiple columns with image url, pass down multiple values to `remoteImageFieldNames` and use `mysqlImages` in your graphql query, which will be an array of images.
 
 ## Plugin options
 
