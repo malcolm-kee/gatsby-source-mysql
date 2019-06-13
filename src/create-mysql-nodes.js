@@ -86,9 +86,9 @@ async function createMysqlNode(
     if (imageNodes.length > 0) {
       sqlNode.mysqlImage___NODE = imageNodes[0].id;
     }
-  } else {
-    sqlNode.mysqlImages___NODE = imageNodes.map(imageNode => imageNode.id);
   }
+
+  sqlNode.mysqlImages___NODE = imageNodes.map(imageNode => imageNode.id);
 
   await createNode(sqlNode);
 }
