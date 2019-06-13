@@ -1,4 +1,5 @@
 const createNodeHelpers = require('gatsby-node-helpers').default;
+const { createRemoteFileNode } = require('gatsby-source-filesystem');
 const pluralize = require('pluralize');
 
 const { createNodeFactory, generateNodeId } = createNodeHelpers({
@@ -58,12 +59,45 @@ function mapSqlResults(
   });
 }
 
-async function createMysqlNodes(
-  { name, __sqlResult, idFieldName, parentName, foreignKey },
-  allSqlResults,
-  { createNode }
+async function createMysqlNode(
+  node,
+  { name, remoteImageFieldNames },
+  { createNode, store, createNodeId, cache }
 ) {
   const MySqlNode = createNodeFactory(name);
+  const sqlNode = MySqlNode(node);
+
+  const imageNodes = await Promise.all(
+    remoteImageFieldNames
+      .filter(field => !!node[field])
+      .map(field => {
+        return createRemoteFileNode({
+          url: node[field],
+          parentNodeId: sqlNode.id,
+          store,
+          createNode,
+          createNodeId,
+          cache
+        });
+      })
+  );
+
+  if (imageNodes.length > 0) {
+    if (imageNodes.length === 1) {
+      sqlNode.mysqlImage___NODE = imageNodes[0].id;
+    } else {
+      sqlNode.mysqlImage___NODE = imageNodes.map(imageNode => imageNode.id);
+    }
+  }
+
+  await createNode(sqlNode);
+}
+
+async function createMysqlNodes(
+  { name, __sqlResult, idFieldName, parentName, foreignKey, remoteImageFieldNames = [] },
+  allSqlResults,
+  { createNode, store, createNodeId, cache }
+) {
   const childEntities = allSqlResults.filter(
     ({ parentName }) => !!parentName && parentName === name
   );
@@ -75,10 +109,15 @@ async function createMysqlNodes(
       childEntities
     );
 
-    sqlNodes.forEach(node => {
-      const resultNode = MySqlNode(node);
-      createNode(resultNode);
-    });
+    await Promise.all(
+      sqlNodes.map(node =>
+        createMysqlNode(
+          node,
+          { name, remoteImageFieldNames },
+          { createNode, store, createNodeId, cache }
+        )
+      )
+    );
   }
 }
 
