@@ -172,12 +172,16 @@ query {
 
 If your queries stores the remote url for image and you would like to utilize image processing of Gatsby, provide `remoteImageFieldNames` to the query object.
 
+> Make sure you've installed both [`gatsby-plugin-sharp`][gatsby-plugin-sharp] and [`gatsby-transform-sharp`][gatsby-transformer-sharp] packages and add them to your `gatsby-config.js`.
+
 For example, assuming you have a `actor` table where the `profile_url` column stores the remote image url, e.g. `'https://cdn.pixabay.com/photo/2014/07/10/11/15/balloons-388973_1280.jpg'`.
 
 ```javascript
 // In your gatsby-config.js
 module.exports = {
   plugins: [
+    `gatsby-plugin-sharp`,
+    `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-source-mysql`,
       options: {
@@ -260,3 +264,5 @@ If you have multiple columns with image url, pass down multiple values to `remot
 | `remoteImageFieldNames` | Optional  | columns that contain image url which you want to download and utilize Gatsby image processing capability.                                                                                  |
 
 [raise-issue]: https://github.com/malcolm-kee/gatsby-source-mysql/issues/new
+[gatsby-plugin-sharp]: https://www.gatsbyjs.org/packages/gatsby-plugin-sharp/
+[gatsby-transformer-sharp]: https://www.gatsbyjs.org/packages/gatsby-transformer-sharp/
