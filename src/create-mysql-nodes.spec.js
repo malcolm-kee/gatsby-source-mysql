@@ -20,7 +20,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
@@ -55,7 +55,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
@@ -90,7 +90,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
@@ -123,7 +123,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
@@ -156,7 +156,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, createNode);
+    createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });

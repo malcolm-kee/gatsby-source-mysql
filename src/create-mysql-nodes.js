@@ -61,7 +61,7 @@ function mapSqlResults(
 function createMysqlNodes(
   { name, __sqlResult, idFieldName, parentName, foreignKey },
   allSqlResults,
-  createNode
+  { createNode }
 ) {
   const MySqlNode = createNodeFactory(name);
   const childEntities = allSqlResults.filter(

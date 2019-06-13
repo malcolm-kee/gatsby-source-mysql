@@ -13,7 +13,7 @@ exports.sourceNodes = async ({ actions }, configOptions) => {
         Object.assign({}, query, { __sqlResult: queryResults[index] })
       )
       .forEach((sqlResult, _, sqlResults) =>
-        createMysqlNodes(sqlResult, sqlResults, createNode)
+        createMysqlNodes(sqlResult, sqlResults, { createNode })
       );
 
     db.end();
