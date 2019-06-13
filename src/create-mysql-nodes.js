@@ -70,20 +70,20 @@ async function createMysqlNode(
   const imageNodes = await Promise.all(
     remoteImageFieldNames
       .filter(field => !!node[field])
-      .map(field => {
-        return createRemoteFileNode({
+      .map(field =>
+        createRemoteFileNode({
           url: node[field],
           parentNodeId: sqlNode.id,
           store,
           createNode,
           createNodeId,
           cache
-        });
-      })
+        })
+      )
   );
 
   if (imageNodes.length > 0) {
-    if (imageNodes.length === 1) {
+    if (remoteImageFieldNames.length === 1) {
       sqlNode.mysqlImage___NODE = imageNodes[0].id;
     } else {
       sqlNode.mysqlImage___NODE = imageNodes.map(imageNode => imageNode.id);
