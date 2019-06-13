@@ -168,18 +168,95 @@ query {
 }
 ```
 
+### Download Image for Image Processing
+
+If your queries stores the remote url for image and you would like to utilize image processing of Gatsby, provide `remoteImageFieldNames` to the query object.
+
+For example, assuming you have a `actor` table where the `profile_url` column stores the remote image url, e.g. `'https://cdn.pixabay.com/photo/2014/07/10/11/15/balloons-388973_1280.jpg'`.
+
+```javascript
+// In your gatsby-config.js
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-source-mysql`,
+      options: {
+        connectionDetails: {
+          host: 'localhost',
+          user: 'db-username',
+          password: 'db-password',
+          database: 'world'
+        },
+        queries: [
+          {
+            statement: 'SELECT * FROM actor',
+            idFieldName: 'actor_id',
+            name: 'actor',
+            remoteImageFieldNames: ['profile_url']
+          }
+        ]
+      }
+    }
+    // ... other plugins
+  ]
+};
+```
+
+Then you can query all the images like below. (Note that you have to filter `null` value for the records whose `profile_url` is empty).
+
+```jsx
+import React from 'react';
+import { useStaticQuery, graphql } from 'gatsby';
+import Img from 'gatsby-image';
+
+export const SqlImage = () => {
+  const data = useStaticQuery(graphql`
+    {
+      allMysqlActor {
+        edges {
+          node {
+            mysqlImage {
+              childImageSharp {
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  const images = data.allMysqlActor.edges
+    .filter(edge => !!edge.node.mysqlImage)
+    .map(edge => edge.node.mysqlImage.childImageSharp.fluid);
+
+  return (
+    <div>
+      {images.map((img, index) => (
+        <Img fluid={img} key={index} />
+      ))}
+    </div>
+  );
+};
+```
+
+If you have multiple columns with image url, pass down multiple values to `remoteImageFieldNames` and use `mysqlImages`, which will be an array of images.
+
 ## Plugin options
 
 - **connectionDetails** (required): options when establishing the connection. Refer to [`mysql` connection options](https://www.npmjs.com/package/mysql#connection-options)
 - **queries** (required): an array of object for your query. Each object could have the following fields:
 
-| Field         | Required? | Description                                                                                                                                                                                |
-| ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `statement`   | Required  | the SQL query statement to be executed. Stored procedures are supported, e.g. `'CALL myProcedureThatReturnsResult(1, 1)'`                                                                  |
-| `idFieldName` | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
-| `name`        | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
-| `parentName`  | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
-| `foreignKey`  | Optional  | foreign key to join the parent entity.                                                                                                                                                     |
-| `cardinality` | Optional  | the relationship between the parent and this entity. Possible values: `"OneToMany"`, `"OneToOne"`. Default to `"OneToMany"`. (Note: many-to-many relationship is currently not supported.) |
+| Field                   | Required? | Description                                                                                                                                                                                |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `statement`             | Required  | the SQL query statement to be executed. Stored procedures are supported, e.g. `'CALL myProcedureThatReturnsResult(1, 1)'`                                                                  |
+| `idFieldName`           | Required  | column that is unique for each record. This column must be returned by the `statement`.                                                                                                    |
+| `name`                  | Required  | name for the query. Will impact the value for the graphql type                                                                                                                             |
+| `parentName`            | Optional  | name for the parent entity. In a one-to-many relationship, this field should be specified on the child entity (entity with many records).                                                  |
+| `foreignKey`            | Optional  | foreign key to join the parent entity.                                                                                                                                                     |
+| `cardinality`           | Optional  | the relationship between the parent and this entity. Possible values: `"OneToMany"`, `"OneToOne"`. Default to `"OneToMany"`. (Note: many-to-many relationship is currently not supported.) |
+| `remoteImageFieldNames` | Optional  | columns that contain image url which you want to download and utilize Gatsby image processing capability.                                                                                  |
 
 [raise-issue]: https://github.com/malcolm-kee/gatsby-source-mysql/issues/new
