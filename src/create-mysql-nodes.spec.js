@@ -5,7 +5,7 @@ describe('createMysqlNodes', () => {
     expect(typeof createMysqlNodes).toBe('function');
   });
 
-  it('will create correct nodes', () => {
+  it('will create correct nodes', async () => {
     const createNode = jest.fn();
     const allSqlResults = [
       {
@@ -20,12 +20,12 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
+    await createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
 
-  it('will create correct nodes for child entity in one-to-many relationship', () => {
+  it('will create correct nodes for child entity in one-to-many relationship', async () => {
     const createNode = jest.fn();
     const allSqlResults = [
       {
@@ -55,12 +55,12 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
+    await createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
 
-  it('will create correct nodes for parent entity in one-to-many relationship', () => {
+  it('will create correct nodes for parent entity in one-to-many relationship', async () => {
     const createNode = jest.fn();
     const allSqlResults = [
       {
@@ -90,12 +90,12 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
+    await createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
 
-  it('creates correct node for child entity in one-to-one relationship', () => {
+  it('creates correct node for child entity in one-to-one relationship', async () => {
     const createNode = jest.fn();
     const allSqlResults = [
       {
@@ -123,12 +123,12 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
+    await createMysqlNodes(allSqlResults[0], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });
 
-  it('creates correct node for parent entity in one-to-one relationship', () => {
+  it('creates correct node for parent entity in one-to-one relationship', async () => {
     const createNode = jest.fn();
     const allSqlResults = [
       {
@@ -156,7 +156,7 @@ describe('createMysqlNodes', () => {
       }
     ];
 
-    createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
+    await createMysqlNodes(allSqlResults[1], allSqlResults, { createNode });
 
     expect(createNode.mock.calls).toMatchSnapshot();
   });

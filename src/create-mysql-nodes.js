@@ -58,7 +58,7 @@ function mapSqlResults(
   });
 }
 
-function createMysqlNodes(
+async function createMysqlNodes(
   { name, __sqlResult, idFieldName, parentName, foreignKey },
   allSqlResults,
   { createNode }

@@ -8,13 +8,15 @@ exports.sourceNodes = async ({ actions }, configOptions) => {
   const { db, queryResults } = await queryDb(connectionDetails, queries);
 
   try {
-    queries
-      .map((query, index) =>
-        Object.assign({}, query, { __sqlResult: queryResults[index] })
-      )
-      .forEach((sqlResult, _, sqlResults) =>
+    const sqlData = queries.map((query, index) =>
+      Object.assign({}, query, { __sqlResult: queryResults[index] })
+    );
+
+    await Promise.all(
+      sqlData.map((sqlResult, _, sqlResults) =>
         createMysqlNodes(sqlResult, sqlResults, { createNode })
-      );
+      )
+    );
 
     db.end();
   } catch (e) {
