@@ -1,4 +1,5 @@
 const createNodeHelpers = require('gatsby-node-helpers').default;
+const { createRemoteFileNode } = require('gatsby-source-filesystem');
 const pluralize = require('pluralize');
 
 const { createNodeFactory, generateNodeId } = createNodeHelpers({
@@ -58,12 +59,52 @@ function mapSqlResults(
   });
 }
 
-function createMysqlNodes(
-  { name, __sqlResult, idFieldName, parentName, foreignKey },
-  allSqlResults,
-  createNode
+async function createMysqlNode(
+  node,
+  { name, remoteImageFieldNames },
+  { createNode, store, createNodeId, cache, reporter }
 ) {
   const MySqlNode = createNodeFactory(name);
+  const sqlNode = MySqlNode(node);
+
+  const remoteNodes = await Promise.all(
+    remoteImageFieldNames
+      .filter(field => !!node[field])
+      .map(async field => {
+        try {
+          return await createRemoteFileNode({
+            url: node[field],
+            parentNodeId: sqlNode.id,
+            store,
+            createNode,
+            createNodeId,
+            cache
+          });
+        } catch (e) {
+          reporter.error(`Error when getting image ${node[field]}`, e);
+        }
+      })
+  );
+
+  // filter out nodes which fail
+  const imageNodes = remoteNodes.filter(Boolean);
+
+  if (remoteImageFieldNames.length === 1) {
+    if (imageNodes.length > 0) {
+      sqlNode.mysqlImage___NODE = imageNodes[0].id;
+    }
+  }
+
+  sqlNode.mysqlImages___NODE = imageNodes.map(imageNode => imageNode.id);
+
+  await createNode(sqlNode);
+}
+
+async function createMysqlNodes(
+  { name, __sqlResult, idFieldName, parentName, foreignKey, remoteImageFieldNames = [] },
+  allSqlResults,
+  { createNode, store, createNodeId, cache, reporter }
+) {
   const childEntities = allSqlResults.filter(
     ({ parentName }) => !!parentName && parentName === name
   );
@@ -75,10 +116,15 @@ function createMysqlNodes(
       childEntities
     );
 
-    sqlNodes.forEach(node => {
-      const resultNode = MySqlNode(node);
-      createNode(resultNode);
-    });
+    await Promise.all(
+      sqlNodes.map(node =>
+        createMysqlNode(
+          node,
+          { name, remoteImageFieldNames },
+          { createNode, store, createNodeId, cache, reporter }
+        )
+      )
+    );
   }
 }
 

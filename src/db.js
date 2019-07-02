@@ -1,12 +1,12 @@
 const mysql = require('mysql');
 
-function query(dbConnection, statement) {
+function query(dbConnection, statement, reporter) {
   return new Promise((fulfill, reject) => {
     dbConnection.query(statement, (error, results) => {
       if (error) return reject(error);
 
       if (/^call/i.test(statement)) {
-        console.info(`stored procedure statments: '${statement}'`);
+        reporter.info(`stored procedure statments: '${statement}'`);
         return fulfill(results[0]);
       }
 
@@ -15,18 +15,23 @@ function query(dbConnection, statement) {
   });
 }
 
-function queryDb(connectionDetails, queries) {
+function queryDb(connectionDetails, queries, reporter) {
   const db = mysql.createConnection(connectionDetails);
 
-  return Promise.all(queries.map(({ statement }) => query(db, statement)))
+  db.connect(err => {
+    if (err) {
+      reporter.panic(`Error establishing db connection`, err);
+    }
+  });
+
+  return Promise.all(queries.map(({ statement }) => query(db, statement, reporter)))
     .then(queryResults => ({
       queryResults,
       db
     }))
     .catch(err => {
-      console.error(err);
       db.end();
-      throw err;
+      reporter.error(`Error making queries`, err);
     });
 }
 
