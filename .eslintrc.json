@@ -7,8 +7,5 @@
     "node": true,
     "es6": true,
     "jest": true
-  },
-  "rules": {
-    "no-console": ["error", { "allow": ["error", "info"] }]
   }
 }

@@ -62,25 +62,32 @@ function mapSqlResults(
 async function createMysqlNode(
   node,
   { name, remoteImageFieldNames },
-  { createNode, store, createNodeId, cache }
+  { createNode, store, createNodeId, cache, reporter }
 ) {
   const MySqlNode = createNodeFactory(name);
   const sqlNode = MySqlNode(node);
 
-  const imageNodes = await Promise.all(
+  const remoteNodes = await Promise.all(
     remoteImageFieldNames
       .filter(field => !!node[field])
-      .map(field =>
-        createRemoteFileNode({
-          url: node[field],
-          parentNodeId: sqlNode.id,
-          store,
-          createNode,
-          createNodeId,
-          cache
-        })
-      )
+      .map(async field => {
+        try {
+          return await createRemoteFileNode({
+            url: node[field],
+            parentNodeId: sqlNode.id,
+            store,
+            createNode,
+            createNodeId,
+            cache
+          });
+        } catch (e) {
+          reporter.error(`Error when getting image ${node[field]}`, e);
+        }
+      })
   );
+
+  // filter out nodes which fail
+  const imageNodes = remoteNodes.filter(Boolean);
 
   if (remoteImageFieldNames.length === 1) {
     if (imageNodes.length > 0) {
@@ -96,7 +103,7 @@ async function createMysqlNode(
 async function createMysqlNodes(
   { name, __sqlResult, idFieldName, parentName, foreignKey, remoteImageFieldNames = [] },
   allSqlResults,
-  { createNode, store, createNodeId, cache }
+  { createNode, store, createNodeId, cache, reporter }
 ) {
   const childEntities = allSqlResults.filter(
     ({ parentName }) => !!parentName && parentName === name
@@ -114,7 +121,7 @@ async function createMysqlNodes(
         createMysqlNode(
           node,
           { name, remoteImageFieldNames },
-          { createNode, store, createNodeId, cache }
+          { createNode, store, createNodeId, cache, reporter }
         )
       )
     );
