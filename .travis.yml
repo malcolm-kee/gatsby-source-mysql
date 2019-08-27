@@ -1,3 +1,12 @@
 language: node_js
 node_js:
   - '8'
+cache:
+  yarn: true
+  directories:
+    - '~/.cache'
+install:
+  - yarn
+script:
+  - yarn lint
+  - yarn test
