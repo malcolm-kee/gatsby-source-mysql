@@ -1,6 +1,9 @@
 const createNodeHelpers = require('gatsby-node-helpers').default;
 const { createRemoteFileNode } = require('gatsby-source-filesystem');
 const pluralize = require('pluralize');
+const { chunk } = require('lodash');
+
+const BATCH_SIZE = 3;
 
 const { createNodeFactory, generateNodeId } = createNodeHelpers({
   typePrefix: 'mysql'
@@ -110,21 +113,23 @@ async function createMysqlNodes(
   );
 
   if (Array.isArray(__sqlResult)) {
-    const sqlNodes = mapSqlResults(
+    const sqlNodesChunks = chunk(mapSqlResults(
       __sqlResult,
       { foreignKey, parentName, childEntities, idFieldName },
       childEntities
-    );
+    ), BATCH_SIZE);
 
-    await Promise.all(
-      sqlNodes.map(node =>
-        createMysqlNode(
-          node,
-          { name, remoteImageFieldNames },
-          { createNode, store, createNodeId, cache, reporter }
+    for (let sqlNodes of sqlNodesChunks) {
+      await Promise.all(
+        sqlNodes.map(node =>
+          createMysqlNode(
+            node,
+            { name, remoteImageFieldNames },
+            { createNode, store, createNodeId, cache, reporter }
+          )
         )
-      )
-    );
+      );
+    }
   }
 }
 
