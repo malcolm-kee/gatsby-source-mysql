@@ -84,7 +84,11 @@ async function createMysqlNode(
             cache
           });
         } catch (e) {
-          reporter.error(`Error when getting image ${node[field]}`, e);
+          if (typeof e === 'string') {
+            reporter.error(`Error when getting image ${node[field]}: ${e.toString()}`);
+          } else {
+            reporter.error(`Error when getting image ${node[field]}`, e);
+          }
         }
       })
   );
