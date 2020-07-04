@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-mysql",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Source plugin for pulling data into Gatsby from MySQL database.",
   "author": "Malcolm Kee <malcolm.keeweesiong@gmail.com>",
   "scripts": {
@@ -17,8 +17,8 @@
   "dependencies": {
     "gatsby-node-helpers": "^0.3.0",
     "lodash": "^4.17.15",
-    "mysql": "^2.16.0",
-    "pluralize": "^7.0.0"
+    "mysql": "^2.18.1",
+    "pluralize": "^8.0.0"
   },
   "peerDependencies": {
     "gatsby": ">2.0.0",
@@ -31,9 +31,9 @@
     "url": "https://github.com/malcolm-kee/gatsby-source-mysql/issues"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.12",
-    "eslint": "^6.2.2",
-    "gatsby-source-filesystem": "^2.0.39",
-    "jest": "^24.8.0"
+    "@types/jest": "^26.0.3",
+    "eslint": "^7.4.0",
+    "gatsby-source-filesystem": "^2.3.18",
+    "jest": "^26.1.0"
   }
 }
